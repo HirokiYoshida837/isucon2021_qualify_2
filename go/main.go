@@ -1080,15 +1080,10 @@ func getTrend(c echo.Context) error {
 	isuList := []Isu{}
 	err := db.Select(&isuList, "SELECT * FROM `isu` GROUP BY `character`")
 
-	c.Logger().Debug("getTrend: ")
-
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	c.Logger().Debug("IsuList:")
-	c.Logger().Debug(isuList)
 
 	lastCharacter := ""
 
@@ -1098,7 +1093,11 @@ func getTrend(c echo.Context) error {
 	res := []TrendResponse{}
 
 	for _, isu := range isuList {
-		if lastCharacter == "" || lastCharacter != isu.Character {
+		if lastCharacter == "" {
+			lastCharacter = isu.Character
+		}
+
+		if lastCharacter != isu.Character {
 			sort.Slice(characterInfoIsuConditions, func(i, j int) bool {
 				return characterInfoIsuConditions[i].Timestamp > characterInfoIsuConditions[j].Timestamp
 			})
@@ -1115,10 +1114,10 @@ func getTrend(c echo.Context) error {
 					Warning:   characterWarningIsuConditions,
 					Critical:  characterCriticalIsuConditions,
 				})
-			lastCharacter = isu.Character
 			characterInfoIsuConditions = []*TrendCondition{}
 			characterWarningIsuConditions = []*TrendCondition{}
 			characterCriticalIsuConditions = []*TrendCondition{}
+			lastCharacter = isu.Character
 		}
 
 		conditions := []IsuCondition{}
@@ -1131,11 +1130,6 @@ func getTrend(c echo.Context) error {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
-		c.Logger().Debug("JIAIsuUUID:")
-		c.Logger().Debug(isu.JIAIsuUUID)
-		c.Logger().Debug("Conditions:")
-		c.Logger().Debug(conditions)
-
 		if len(conditions) > 0 {
 			isuLastCondition := conditions[0]
 			conditionLevel, err := calculateConditionLevel(isuLastCondition.Condition)
@@ -1147,13 +1141,21 @@ func getTrend(c echo.Context) error {
 				ID:        isu.ID,
 				Timestamp: isuLastCondition.Timestamp.Unix(),
 			}
+			c.Logger().Debug("Isu ID:")
+			c.Logger().Debug(isu.ID)
 			switch conditionLevel {
 			case "info":
 				characterInfoIsuConditions = append(characterInfoIsuConditions, &trendCondition)
+				c.Logger().Debug("Info:")
+				c.Logger().Debug(characterInfoIsuConditions)
 			case "warning":
 				characterWarningIsuConditions = append(characterWarningIsuConditions, &trendCondition)
+				c.Logger().Debug("Warning:")
+				c.Logger().Debug(characterWarningIsuConditions)
 			case "critical":
 				characterCriticalIsuConditions = append(characterCriticalIsuConditions, &trendCondition)
+				c.Logger().Debug("Critical:")
+				c.Logger().Debug(characterCriticalIsuConditions)
 			}
 		}
 
