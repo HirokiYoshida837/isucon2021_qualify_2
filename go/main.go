@@ -1078,7 +1078,7 @@ func calculateConditionLevel(condition string) (string, error) {
 // ISUの性格毎の最新のコンディション情報
 func getTrend(c echo.Context) error {
 	isuList := []Isu{}
-	err := db.Select(&isuList, "SELECT * FROM `isu` GROUP BY `character`")
+	err := db.Select(&isuList, "SELECT * FROM `isu` ORDER BY `character`")
 
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
