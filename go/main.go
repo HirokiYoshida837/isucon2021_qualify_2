@@ -1152,6 +1152,8 @@ func getTrend(c echo.Context) error {
 			})
 	}
 
+	fmt.Println(res)
+
 	return c.JSON(http.StatusOK, res)
 }
 
