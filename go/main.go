@@ -1165,6 +1165,8 @@ func getTrend(c echo.Context) error {
 			Critical:  characterCriticalIsuConditions,
 		})
 
+	fmt.Println(res)
+
 	return c.JSON(http.StatusOK, res)
 }
 
