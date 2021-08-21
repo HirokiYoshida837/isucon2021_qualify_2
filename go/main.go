@@ -1078,6 +1078,9 @@ func calculateConditionLevel(condition string) (string, error) {
 // ISUの性格毎の最新のコンディション情報
 func getTrend(c echo.Context) error {
 	characterList := []Isu{}
+
+	c.Logger().Debug("getTrend:")
+
 	err := db.Select(&characterList, "SELECT `character` FROM `isu` GROUP BY `character`")
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
@@ -1097,6 +1100,9 @@ func getTrend(c echo.Context) error {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
+		c.Logger().Debug("IsuList:")
+		c.Logger().Debug(isuList)
+
 		characterInfoIsuConditions := []*TrendCondition{}
 		characterWarningIsuConditions := []*TrendCondition{}
 		characterCriticalIsuConditions := []*TrendCondition{}
@@ -1110,6 +1116,9 @@ func getTrend(c echo.Context) error {
 				c.Logger().Errorf("db error: %v", err)
 				return c.NoContent(http.StatusInternalServerError)
 			}
+
+			c.Logger().Debug("Conditions:")
+			c.Logger().Debug(conditions)
 
 			if len(conditions) > 0 {
 				isuLastCondition := conditions[0]
@@ -1152,7 +1161,8 @@ func getTrend(c echo.Context) error {
 			})
 	}
 
-	fmt.Println(res)
+	c.Logger().Debug("Res: ")
+	c.Logger().Debug(res)
 
 	return c.JSON(http.StatusOK, res)
 }
