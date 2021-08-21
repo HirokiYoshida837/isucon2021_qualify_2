@@ -1125,12 +1125,16 @@ func getTrend(c echo.Context) error {
 			"SELECT * FROM `isu_condition` WHERE `jia_isu_uuid` = ? ORDER BY timestamp DESC",
 			isu.JIAIsuUUID,
 		)
+		c.Logger().Debug("JIAIsuUUID before:")
+		c.Logger().Debug(isu.JIAIsuUUID)
 		if err != nil {
 			c.Logger().Errorf("db error: %v", err)
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
 		if len(conditions) > 0 {
+			c.Logger().Debug("JIAIsuUUID after:")
+			c.Logger().Debug(isu.JIAIsuUUID)
 			isuLastCondition := conditions[0]
 			conditionLevel, err := calculateConditionLevel(isuLastCondition.Condition)
 			if err != nil {
@@ -1141,21 +1145,21 @@ func getTrend(c echo.Context) error {
 				ID:        isu.ID,
 				Timestamp: isuLastCondition.Timestamp.Unix(),
 			}
-			c.Logger().Debug("Isu ID:")
-			c.Logger().Debug(isu.ID)
+			//c.Logger().Debug("Isu ID:")
+			//c.Logger().Debug(isu.ID)
 			switch conditionLevel {
 			case "info":
 				characterInfoIsuConditions = append(characterInfoIsuConditions, &trendCondition)
-				c.Logger().Debug("Info:")
-				c.Logger().Debug(characterInfoIsuConditions)
+				//c.Logger().Debug("Info:")
+				//c.Logger().Debug(characterInfoIsuConditions)
 			case "warning":
 				characterWarningIsuConditions = append(characterWarningIsuConditions, &trendCondition)
-				c.Logger().Debug("Warning:")
-				c.Logger().Debug(characterWarningIsuConditions)
+				//c.Logger().Debug("Warning:")
+				//c.Logger().Debug(characterWarningIsuConditions)
 			case "critical":
 				characterCriticalIsuConditions = append(characterCriticalIsuConditions, &trendCondition)
-				c.Logger().Debug("Critical:")
-				c.Logger().Debug(characterCriticalIsuConditions)
+				//c.Logger().Debug("Critical:")
+				//c.Logger().Debug(characterCriticalIsuConditions)
 			}
 		}
 
