@@ -14,7 +14,8 @@ sudo systemctl restart mysql
 sudo systemctl restart isucondition.go.service
 sudo systemctl restart nginx
 
-
+# mock stop
+sudo systemctl restart jiaapi-mock.service
 
 
 
