@@ -1084,8 +1084,8 @@ func getTrend(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	fmt.Println("IsuList:")
-	fmt.Println(isuList)
+	c.Logger().Info("IsuList:")
+	c.Logger().Info(isuList)
 
 	lastCharacter := ""
 
@@ -1128,10 +1128,10 @@ func getTrend(c echo.Context) error {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
-		fmt.Println("JIAIsuUUID:")
-		fmt.Println(isu.JIAIsuUUID)
-		fmt.Println("Conditions:")
-		fmt.Println(conditions)
+		c.Logger().Info("JIAIsuUUID:")
+		c.Logger().Info(isu.JIAIsuUUID)
+		c.Logger().Info("Conditions:")
+		c.Logger().Info(conditions)
 
 		if len(conditions) > 0 {
 			isuLastCondition := conditions[0]
@@ -1173,8 +1173,8 @@ func getTrend(c echo.Context) error {
 			Critical:  characterCriticalIsuConditions,
 		})
 
-	fmt.Println("getTrend Response:")
-	fmt.Println(res)
+	c.Logger().Info("getTrend Response:")
+	c.Logger().Info(res)
 
 	return c.JSON(http.StatusOK, res)
 }
