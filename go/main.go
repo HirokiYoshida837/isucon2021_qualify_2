@@ -1080,15 +1080,15 @@ func getTrend(c echo.Context) error {
 	isuList := []Isu{}
 	err := db.Select(&isuList, "SELECT * FROM `isu` GROUP BY `character`")
 
-	c.Logger().Warn("getTrend: ")
+	c.Logger().Debug("getTrend: ")
 
 	if err != nil {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	c.Logger().Warn("IsuList:")
-	c.Logger().Warn(isuList)
+	c.Logger().Debug("IsuList:")
+	c.Logger().Debug(isuList)
 
 	lastCharacter := ""
 
@@ -1131,10 +1131,10 @@ func getTrend(c echo.Context) error {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
-		c.Logger().Warn("JIAIsuUUID:")
-		c.Logger().Warn(isu.JIAIsuUUID)
-		c.Logger().Warn("Conditions:")
-		c.Logger().Warn(conditions)
+		c.Logger().Debug("JIAIsuUUID:")
+		c.Logger().Debug(isu.JIAIsuUUID)
+		c.Logger().Debug("Conditions:")
+		c.Logger().Debug(conditions)
 
 		if len(conditions) > 0 {
 			isuLastCondition := conditions[0]
@@ -1176,8 +1176,8 @@ func getTrend(c echo.Context) error {
 			Critical:  characterCriticalIsuConditions,
 		})
 
-	c.Logger().Warn("getTrend Response:")
-	c.Logger().Warn(res)
+	c.Logger().Debug("getTrend Response:")
+	c.Logger().Debug(res)
 
 	return c.JSON(http.StatusOK, res)
 }
