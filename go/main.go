@@ -1131,13 +1131,21 @@ func getTrend(c echo.Context) error {
 					ID:        isu.ID,
 					Timestamp: isuLastCondition.Timestamp.Unix(),
 				}
+				c.Logger().Debug("Isu ID:")
+				c.Logger().Debug(isu.ID)
 				switch conditionLevel {
 				case "info":
 					characterInfoIsuConditions = append(characterInfoIsuConditions, &trendCondition)
+					c.Logger().Debug("Info:")
+					c.Logger().Debug(characterInfoIsuConditions)
 				case "warning":
 					characterWarningIsuConditions = append(characterWarningIsuConditions, &trendCondition)
+					c.Logger().Debug("Warning:")
+					c.Logger().Debug(characterWarningIsuConditions)
 				case "critical":
 					characterCriticalIsuConditions = append(characterCriticalIsuConditions, &trendCondition)
+					c.Logger().Debug("Critical:")
+					c.Logger().Debug(characterCriticalIsuConditions)
 				}
 			}
 
